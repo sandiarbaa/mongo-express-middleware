@@ -2,18 +2,21 @@ const express = require("express");
 const app = express();
 morgan = require("morgan");
 
-// MIDDLEWARE DIGUNAKAN DENGAN METHOD USE DI APP
-// app.use adalah method yg akan pertama kali bekerja sebelum mengeksekusi route get dll, atau listen dll
-// jadi setelah melakukan/atau mendapatkan request app.use akan dijalankan, dan app.use ini akan bekerja sebelum mengeksekusi responnya
-// app.use(() => {
-//   console.log("hei");
-// });
-
-// app.use(morgan("tiny"));
-// app.use(
-//   morgan(":method :url :status :res[content-length] - :response-time ms")
-// );
 app.use(morgan("dev"));
+app.use((req, res, next) => {
+  //next(); // diletakkan sebelum respon
+  console.log("middleware pertama");
+  next();
+  console.log("middleware pertama setelah next");
+  // res.send("Hello Middleware");
+});
+
+app.use((req, res, next) => {
+  console.log("middleware kedua");
+  next();
+  console.log("middleware kedua setelah next");
+  console.log("middleware ketiga setelah next");
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World");
