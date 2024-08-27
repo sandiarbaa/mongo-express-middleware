@@ -3,19 +3,12 @@ const app = express();
 morgan = require("morgan");
 
 app.use(morgan("dev"));
-app.use((req, res, next) => {
-  //next(); // diletakkan sebelum respon
-  console.log("middleware pertama");
-  next();
-  console.log("middleware pertama setelah next");
-  // res.send("Hello Middleware");
-});
 
 app.use((req, res, next) => {
-  console.log("middleware kedua");
+  //req.method = "PUT"; // meng-overwrite method saja bisa apa lagi membuat properti baru
+  req.timeRequest = Date.now(); // secara default properti timeRequest tidak ada, ini menambahkan sendiri untuk mencoba saja kalao di middleware itu bisa mengotak atik object req dan res
+  console.log(req.method, req.url);
   next();
-  console.log("middleware kedua setelah next");
-  console.log("middleware ketiga setelah next");
 });
 
 app.get("/", (req, res) => {
@@ -23,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/halaman", (req, res) => {
+  console.log(req.timeRequest);
   res.send("halaman");
 });
 
